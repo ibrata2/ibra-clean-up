@@ -1,0 +1,58 @@
+{
+  "name": "ibra-clean-up",
+  "productName": "IBRA CLEAN UP",
+  "version": "1.0.0",
+  "description": "IBRA CLEAN UP - محلل المساحة ومنظف الملفات المؤقتة والكاش لويندوز",
+  "main": "src/main.js",
+  "author": "Ibrahim Al-Khazraji (IBRAPROGRAM)",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --win dir --x64",
+    "installer": "node scripts/make-installer.js",
+    "dist": "npm run pack && npm run installer",
+    "test:scan": "node scripts/test-scan.js"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "resedit": "^2.0.2"
+  },
+  "build": {
+    "appId": "com.ibraprogram.ibracleanup",
+    "productName": "IBRA CLEAN UP",
+    "copyright": "© IBRAPROGRAM - ابراهيم الخزرجي",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "build/icon.png",
+      "package.json"
+    ],
+    "afterPack": "scripts/after-pack.js",
+    "win": {
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "requestedExecutionLevel": "asInvoker",
+      "artifactName": "IBRA-CLEAN-UP-Setup-${version}.${ext}"
+    },
+    "asarUnpack": [
+      "src/scanner-worker.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ibrata2/ibra-clean-up.git"
+  }
+}

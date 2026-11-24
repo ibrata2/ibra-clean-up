@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'">
+<title>IBRA CLEAN UP</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="titlebar">
+  <img src="../../build/icon.png" alt="">
+  <span class="brand"><b>IBRA</b> CLEAN UP</span>
+  <span class="sub" data-i="tagline"></span>
+  <span class="grow"></span>
+  <span id="adminBadge" class="chip admin badge"></span>
+</div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main">
+    <section class="view" id="v-home"></section>
+    <section class="view" id="v-analyzer"></section>
+    <section class="view" id="v-clean"></section>
+    <section class="view" id="v-large"></section>
+    <section class="view" id="v-types"></section>
+    <section class="view" id="v-smart"></section>
+    <section class="view" id="v-history"></section>
+    <section class="view" id="v-about"></section>
+  </main>
+</div>
+
+<div class="overlay" id="scanOverlay">
+  <div class="card scanbox">
+    <div class="radar"></div>
+    <h2 id="scanTitle"></h2>
+    <div class="scan-num" id="scanBytes">0 B</div>
+    <div class="muted" id="scanCounts"></div>
+    <div class="scan-cur" id="scanCur"></div>
+    <button class="btn danger" id="scanCancel"></button>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="knowledge.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

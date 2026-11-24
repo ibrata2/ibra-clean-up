@@ -1,7 +1,7 @@
 {
   "name": "ibra-clean-up",
   "productName": "IBRA CLEAN UP",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "IBRA CLEAN UP - محلل المساحة ومنظف الملفات المؤقتة والكاش لويندوز",
   "main": "src/main.js",
   "author": "Ibrahim Al-Khazraji (IBRAPROGRAM)",

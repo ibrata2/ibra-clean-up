@@ -75,7 +75,7 @@ app.on('browser-window-created', (_e, win) => {
     const js = (c) => win.webContents.executeJavaScript(c);
     const shot = async (n) => { await wait(700); const img = await win.webContents.capturePage(); fs.writeFileSync(path.join(OUT, n + '.png'), img.toPNG()); };
     try {
-      await wait(2500); console.log('TYPES', await js(`[typeof renderSettings, typeof renderInstaller, typeof placeStoreSlider, typeof ask, [...document.scripts].map(x=>x.src.split('/').pop()).join(',')].join(' ')`)); await shot('1-home-slider');
+      await wait(2500); console.log('TYPES', await js(`[typeof renderSettings, typeof renderInstaller, typeof placeStoreSlider, typeof ask, [...document.scripts].map(x=>x.src.split('/').pop()).join(',')].join(' ')`)); await shot('1-home-slider'); if (process.env.SHOT_QUICK) { await js(`document.querySelector('[data-act=lang]').click()`); await wait(800); await shot('1b-home-en'); app.quit(); return; }
       await js(`go('installer')`); await wait(500); await shot('2-installer-empty');
       await js(`document.querySelector('[data-mact=scan]').click()`); await wait(2500); await shot('3-installer-scan');
       await js(`S.msi.filter='orphan'; S.msi.res.items.filter(x=>x.cat==='orphan').forEach(x=>S.msi.sel.set(x.path,{path:x.path,size:x.size})); renderInstaller()`); await wait(600);

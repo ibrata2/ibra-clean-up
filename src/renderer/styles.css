@@ -23,8 +23,9 @@ button { font-family: inherit; }
 
 /* ───── شريط العنوان ───── */
 .titlebar { height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 14px; -webkit-app-region: drag; border-bottom: 1px solid var(--line); background: var(--bar); }
-html[dir=rtl] .titlebar { padding-left: 150px; }
-html[dir=ltr] .titlebar { padding-right: 150px; }
+/* شريط العنوان بنفس الاتجاه بالعربي والإنكليزي: الأيقونة والاسم يسار، أزرار النافذة يمين */
+.titlebar { direction: ltr; padding-right: 150px; }
+.titlebar .sub { unicode-bidi: isolate; }
 .titlebar img { width: 22px; height: 22px; }
 .titlebar .brand { font-weight: 800; letter-spacing: .5px; }
 .titlebar .brand b { color: var(--gold); }

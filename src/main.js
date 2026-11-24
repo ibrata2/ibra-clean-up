@@ -81,11 +81,11 @@ function createWindow() {
   nativeTheme.themeSource = 'dark';
   win = new BrowserWindow({
     width: 1360, height: 860, minWidth: 1040, minHeight: 640,
-    backgroundColor: '#0b0d17',
+    backgroundColor: '#0c0a0b',
     title: 'IBRA CLEAN UP',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     titleBarStyle: IS_WIN ? 'hidden' : 'default',
-    titleBarOverlay: IS_WIN ? { color: '#0b0d17', symbolColor: '#d4af37', height: 40 } : undefined,
+    titleBarOverlay: IS_WIN ? { color: '#0c0a0b', symbolColor: '#d4af37', height: 40 } : undefined,
     show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: false },
   });

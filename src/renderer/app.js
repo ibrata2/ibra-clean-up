@@ -324,7 +324,7 @@ function drawTreemap() {
   const tiles = squarify(kids, W, H);
   box.innerHTML = tiles.map((tl, i) => {
     const ex = tl.n.id >= 0 ? explainOf(tl.n.path) : null;
-    const c = ex ? TILE_COL[ex.risk] : [`hsl(${(250 + i * 23) % 360} 45% 30%)`, `hsl(${(250 + i * 23) % 360} 50% 40%)`];
+    const c = ex ? TILE_COL[ex.risk] : [`hsl(${(350 + i * 17) % 360} 45% 28%)`, `hsl(${(350 + i * 17) % 360} 50% 38%)`];
     const small = tl.w < 60 || tl.h < 34;
     return `<div class="tile" title="${esc(tl.n.name)} — ${fmt(tl.n.size)}" style="left:${tl.x}px;top:${tl.y}px;width:${tl.w}px;height:${tl.h}px;background:linear-gradient(135deg,${c[1]},${c[0]})" ${tl.n.id >= 0 ? `data-dir="${tl.n.id}" data-path="${esc(tl.n.path)}"` : 'data-direct="1"'}>${small ? '' : `<b dir="auto">${esc(tl.n.name)}</b><span>${fmt(tl.n.size)}</span>`}</div>`;
   }).join('');
@@ -510,7 +510,7 @@ async function renderClean() {
   const groups = S.defs.groups.map((g) => {
     const cats = S.defs.categories.filter((c) => c.group === g.id && !(S.junk[c.id] && !S.junk[c.id].roots.length && !S.junkBusy.has(c.id) && !S.showMissing));
     if (!cats.length) return '';
-    return `<div class="group-title">${g.id === 'auto' ? icon('bolt', 'style="width:18px;height:18px;color:#b9a6ff"') : ''}<span>${esc(g[S.lang])}</span><span class="line"></span><span class="ltr muted">${fmt(cats.reduce((a, c) => a + (S.junk[c.id] ? S.junk[c.id].size : 0), 0))}</span></div>` +
+    return `<div class="group-title">${g.id === 'auto' ? icon('bolt', 'style="width:18px;height:18px;color:#ff6b7a"') : ''}<span>${esc(g[S.lang])}</span><span class="line"></span><span class="ltr muted">${fmt(cats.reduce((a, c) => a + (S.junk[c.id] ? S.junk[c.id].size : 0), 0))}</span></div>` +
       cats.map(catHTML).join('');
   }).join('');
 

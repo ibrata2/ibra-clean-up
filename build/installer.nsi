@@ -42,7 +42,9 @@ VIAddVersionKey /LANG=1033 "LegalCopyright" "© IBRAPROGRAM"
 !insertmacro MUI_LANGUAGE "English"
 
 Function .onInit
+  IfSilent skipLang
   !insertmacro MUI_LANGDLL_DISPLAY
+  skipLang:
 FunctionEnd
 
 Section "Install"
@@ -63,6 +65,10 @@ Section "Install"
   WriteRegStr HKCU "${UNKEY}" "URLInfoAbout" "https://ibraprogram.netlify.app/"
   WriteRegDWORD HKCU "${UNKEY}" "NoModify" 1
   WriteRegDWORD HKCU "${UNKEY}" "NoRepair" 1
+  ; تحديث داخلي صامت: نعيد تشغيل البرنامج بعد التنصيب
+  IfSilent 0 notSilent
+    Exec '"$INSTDIR\${EXENAME}"'
+  notSilent:
 SectionEnd
 
 Section "Uninstall"

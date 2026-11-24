@@ -50,6 +50,37 @@ const I18N = {
     days: 'يوم', months: 'شهر', years: 'سنة', today: 'اليوم', hours: 'ساعة',
     filesN: (n) => `${n.toLocaleString('en')} ملف`, scanCounts: (f, d, e) => `${f.toLocaleString('en')} ملف • ${d.toLocaleString('en')} مجلد${e ? ' • ' + e + ' تعذر الوصول' : ''}`,
     junkTotal: 'مجموع اللي لكيناه', junkNone: 'اضغط "فحص الكل" حتى نحسب المساحة اللي تكدر تفرغها.',
+    installer: 'مخلفات التثبيت', settings: 'الإعدادات',
+    msiT: 'Windows Installer Cleaner — تنظيف مخلفات تثبيت البرامج',
+    msiD: 'يفحص مجلد C:\\Windows\\Installer المحمي ويحدد ملفات MSI و MSP المرتبطة بالبرامج المثبتة والملفات اليتيمة من برامج وتحديثات قديمة. الأولوية سلامة النظام: أي ملف ما نكدر نتأكد منه يبقى محمي.',
+    msiScan: 'فحص', msiRescan: 'إعادة الفحص', msiExportCsv: 'تصدير التقرير CSV', msiExportHtml: 'تصدير التقرير HTML', tabScan: 'نتائج الفحص', tabBackups: 'النسخ الاحتياطية',
+    msiAdminNeed: 'هذا القسم يحتاج صلاحية مسؤول حتى يتحقق من كل البرامج لكل الحسابات. بدونها يكدر يعرض الملفات بس التنظيف يبقى موقوف.',
+    st_enum: 'جارِ قراءة البرامج والتحديثات المثبتة من Windows Installer...', st_files: 'جارِ فحص الملفات...', st_info: 'جارِ قراءة معلومات الملفات...', st_verify: 'إعادة التحقق قبل التنفيذ...', st_move: 'نقل إلى النسخة الاحتياطية والتحقق من البصمة...', st_delete: 'جارِ الحذف...', st_restore: 'جارِ الاستعادة والتحقق...', st_done: '',
+    msiComplete: (p, t, r) => `الفحص مكتمل ✓ — ${p} برنامج و ${t} تحديث من Windows Installer API، و ${r} مدخل من سجل الويندوز للتحقق الثاني.`,
+    msiIncomplete: 'الفحص غير مكتمل — التنظيف موقوف حفاظاً على النظام. كل الملفات المرشحة تُعرض كـ"غير معروفة".',
+    rs_notAdmin: 'البرنامج مو مشغّل كمسؤول', rs_apiFailed: 'فشل الاتصال بـ Windows Installer API', rs_regFailed: 'تعذرت قراءة سجل Windows Installer', rs_installRunning: 'توجد عملية تثبيت أو إزالة برامج جارية حالياً — انتظر تخلص', rs_cancelled: 'تم إيقاف الفحص',
+    t_total: 'حجم المجلد الكلي', t_files: 'عدد الملفات', t_used: 'ملفات ضرورية', t_orphan: 'يتيمة محتملة', t_excluded: 'مستثناة', t_unknown: 'غير معروفة', t_recoverable: 'المساحة الممكن استرجاعها',
+    c_all: 'الكل', c_used: 'مستخدمة', c_orphan: 'يتيمة محتملة', c_excluded: 'مستثناة', c_unknown: 'غير معروفة',
+    r_usedApi: 'مرتبط ببرنامج أو تحديث مثبت (Windows Installer API) — يُمنع حذفه', r_usedReg: 'مرتبط ببرنامج مثبت حسب سجل الويندوز — يُمنع حذفه', r_orphan: 'ما يرتبط بأي برنامج أو تحديث مثبت بعد فحص مكتمل من مصدرين',
+    r_exclUser: 'أنت استثنيته', r_exclDir: 'مجلد نظام داخل Installer — لا يُلمس أبداً', r_exclType: 'نوع ملف غير MSI/MSP — لا يُلمس', r_exclRecent: 'ملف حديث (أقل من يومين) — ممكن يكون من عملية تثبيت جارية', r_exclLink: 'رابط رمزي — لا نتبعه',
+    r_unknownIncomplete: 'الفحص غير مكتمل فما نكدر نتأكد — يُمنع حذفه', r_unknownStat: 'تعذرت قراءة الملف — يُمنع حذفه',
+    r_nowUsed: 'صار مرتبط ببرنامج عند إعادة التحقق', r_missing: 'الملف ما موجود', r_outside: 'خارج مجلد Installer',
+    colFile: 'الملف', colProduct: 'البرنامج المرتبط', colType: 'النوع', colCreated: 'تاريخ الإنشاء', colReason: 'سبب التصنيف', likely: 'يبدو من:',
+    viewDetails: 'عرض التفاصيل', openLoc: 'فتح موقع الملف', exclude: 'استثناء', unexclude: 'إلغاء الاستثناء', sources: 'مصادر التحقق', code: 'الرمز',
+    moveBackup: 'نقل إلى النسخة الاحتياطية', deletePerm: 'حذف نهائي', backupTo: 'النسخة الاحتياطية في:', change: 'تغيير',
+    moveT: 'نقل إلى النسخة الاحتياطية', moveD: (n, s) => `راح ينتقل ${n} ملف (${s}). كل ملف ينحسب له بصمة SHA-256 وينسخ ويتأكد من سلامته قبل ما ينشال الأصلي.`,
+    sameDrive: '⚠️ مجلد النسخة الاحتياطية على نفس القرص C — الملفات راح تنتقل بس المساحة ما تفرغ. الأفضل تختار قرص ثاني (D مثلاً).',
+    freeOn: 'المساحة الفارغة هناك:', delT: 'حذف نهائي', delD: (n, s) => `راح ينحذف ${n} ملف (${s}) نهائياً بدون نسخة احتياطية.`, delCheck: 'أفهم أن الحذف نهائي، ولا يمكن استرجاع الملفات، وأن النقل للنسخة الاحتياطية هو الخيار الأأمن.',
+    movedOk: (n, s) => `✅ انتقل ${n} ملف — المساحة المسترجعة فعلياً: <b class="ltr gold">${s}</b>`, rejectedN: (n) => `${n} ملف ما انلمس لأن إعادة التحقق رفضته`,
+    e_verifyFailed: 'إعادة التحقق فشلت — ما انلمس أي ملف', e_noSpace: 'المساحة بقرص النسخة الاحتياطية ما تكفي', e_badBackupDir: 'مجلد النسخة الاحتياطية غير مسموح (داخل ويندوز)', e_nothingAllowed: 'ولا ملف مسموح بعد إعادة التحقق', e_busy: 'توجد عملية جارية', e_exception: 'صار خطأ', e_listFailed: 'تعذر فتح مجلد Installer',
+    bkRoot: 'مجلد النسخ الاحتياطية', bkNone: 'ما توجد نسخ احتياطية.', bk90: 'ننصح تخلي النسخة الاحتياطية 90 يوم على الأقل وتتأكد كل برامجك تشتغل وتتحدث وتنحذف طبيعي قبل ما تحذفها. البرنامج ما يحذفها تلقائياً.',
+    restoreAll: 'استعادة الكل', restore: 'استعادة', purge: 'حذف النسخة نهائياً', daysOld: (d) => `عمرها ${d} يوم`,
+    s_moved: 'محفوظ', s_restored: 'تمت استعادته', s_purged: 'محذوف', s_lost: 'مفقود', s_aborted: 'ملغي',
+    conflictT: 'ملفات موجودة بنفس المكان', conflictD: (n) => `${n} ملف موجود حالياً بنفس المسار. تريد تكتب فوقها؟`, overwrite: 'نعم، اكتب فوقها',
+    restoredOk: (n) => `✅ تمت استعادة ${n} ملف وتطابقت البصمة`, purgeT: 'حذف النسخة الاحتياطية', purgeD: 'الملفات بهاي النسخة تنحذف نهائياً ولا يمكن استعادتها بعدين.', purgeYoung: (d) => `⚠️ النسخة عمرها ${d} يوم بس — ننصح بالانتظار 90 يوم.`,
+    noRestorePoint: 'ملاحظة: نقطة استعادة النظام ما تعتبر بديل عن هاي النسخة الاحتياطية.',
+    themeT: 'الستايل', langT: 'اللغة', th_glassRed: 'زجاج أحمر وأسود', th_glassWhiteRed: 'زجاج أبيض وأحمر', th_glassWhite: 'زجاج أبيض', th_glassClear: 'زجاج شفاف', th_dark: 'ليلي', th_light: 'أبيض', th_system: 'حسب ويندوز',
+    thd_glassClear: 'يبين خلفية سطح المكتب من وراه', thd_system: 'يتبدل مع وضع ويندوز الفاتح والداكن', glassNote: 'تأثير الزجاج الحقيقي يحتاج ويندوز 11 — على ويندوز 10 يطلع نفس الألوان بدون شفافية.',
     whole: 'الفئة كاملة', showMissing: 'عرض غير الموجودة بجهازك', hideMissing: 'إخفاء غير الموجودة', loading: 'جارِ التحميل...', more: (n) => `و ${n} أخرى`,
   },
   en: {
@@ -94,6 +125,37 @@ const I18N = {
     days: 'd', months: 'mo', years: 'y', today: 'today', hours: 'h',
     filesN: (n) => `${n.toLocaleString('en')} files`, scanCounts: (f, d, e) => `${f.toLocaleString('en')} files • ${d.toLocaleString('en')} folders${e ? ' • ' + e + ' inaccessible' : ''}`,
     junkTotal: 'Total found', junkNone: 'Press "Scan all" to calculate the space you can free.',
+    installer: 'Installer Leftovers', settings: 'Settings',
+    msiT: 'Windows Installer Cleaner',
+    msiD: 'Scans the protected C:\\Windows\\Installer folder and tells MSI/MSP files used by installed programs apart from orphans left by old programs and updates. Safety first: anything that cannot be verified stays protected.',
+    msiScan: 'Scan', msiRescan: 'Rescan', msiExportCsv: 'Export report CSV', msiExportHtml: 'Export report HTML', tabScan: 'Scan results', tabBackups: 'Backups',
+    msiAdminNeed: 'This section needs administrator rights to verify every program for every account. Without them it can list files but cleaning stays disabled.',
+    st_enum: 'Reading installed products and patches from Windows Installer...', st_files: 'Scanning files...', st_info: 'Reading file information...', st_verify: 'Re-verifying before acting...', st_move: 'Moving to backup and verifying hashes...', st_delete: 'Deleting...', st_restore: 'Restoring and verifying...', st_done: '',
+    msiComplete: (p, t, r) => `Scan complete ✓ — ${p} products and ${t} patches from the Windows Installer API, plus ${r} registry entries as a second check.`,
+    msiIncomplete: 'Scan incomplete — cleaning is disabled to protect the system. All candidates are shown as "Unknown".',
+    rs_notAdmin: 'Not running as administrator', rs_apiFailed: 'Windows Installer API query failed', rs_regFailed: 'Could not read the Windows Installer registry', rs_installRunning: 'An installation or removal is running — wait for it to finish', rs_cancelled: 'Scan was cancelled',
+    t_total: 'Folder total', t_files: 'Files', t_used: 'Required files', t_orphan: 'Possible orphans', t_excluded: 'Excluded', t_unknown: 'Unknown', t_recoverable: 'Recoverable space',
+    c_all: 'All', c_used: 'Used', c_orphan: 'Orphaned', c_excluded: 'Excluded', c_unknown: 'Unknown',
+    r_usedApi: 'Linked to an installed product/patch (Windows Installer API) — protected', r_usedReg: 'Linked to an installed product per the registry — protected', r_orphan: 'No link to any installed product or patch after a complete two-source scan',
+    r_exclUser: 'Excluded by you', r_exclDir: 'System folder inside Installer — never touched', r_exclType: 'Not an MSI/MSP file — never touched', r_exclRecent: 'Recent file (under 2 days) — may belong to a running install', r_exclLink: 'Symbolic link — not followed',
+    r_unknownIncomplete: 'Scan incomplete, cannot verify — protected', r_unknownStat: 'File could not be read — protected',
+    r_nowUsed: 'Became linked to a product on re-check', r_missing: 'File missing', r_outside: 'Outside the Installer folder',
+    colFile: 'File', colProduct: 'Linked program', colType: 'Type', colCreated: 'Created', colReason: 'Reason', likely: 'Looks like:',
+    viewDetails: 'View details', openLoc: 'Open file location', exclude: 'Exclude', unexclude: 'Remove exclusion', sources: 'Verified by', code: 'Code',
+    moveBackup: 'Move to backup', deletePerm: 'Delete permanently', backupTo: 'Backup in:', change: 'Change',
+    moveT: 'Move to backup', moveD: (n, s) => `${n} file(s) (${s}) will be moved. Each file gets a SHA-256 hash, is copied and verified before the original is removed.`,
+    sameDrive: '⚠️ The backup folder is on the same drive — files move but no space is freed. Pick another drive (e.g. D).',
+    freeOn: 'Free space there:', delT: 'Delete permanently', delD: (n, s) => `${n} file(s) (${s}) will be deleted forever with no backup.`, delCheck: 'I understand deletion is permanent, files cannot be recovered, and moving to backup is the safer option.',
+    movedOk: (n, s) => `✅ Moved ${n} file(s) — space actually freed: <b class="ltr gold">${s}</b>`, rejectedN: (n) => `${n} file(s) were left untouched because the re-check rejected them`,
+    e_verifyFailed: 'Re-verification failed — nothing was touched', e_noSpace: 'Not enough space on the backup drive', e_badBackupDir: 'Backup folder not allowed (inside Windows)', e_nothingAllowed: 'No file allowed after re-check', e_busy: 'Another operation is running', e_exception: 'An error occurred', e_listFailed: 'Could not open the Installer folder',
+    bkRoot: 'Backup folder', bkNone: 'No backups.', bk90: 'Keep backups at least 90 days and make sure your programs install, update, repair and uninstall normally before deleting them. Backups are never deleted automatically.',
+    restoreAll: 'Restore all', restore: 'Restore', purge: 'Delete backup permanently', daysOld: (d) => `${d} days old`,
+    s_moved: 'Stored', s_restored: 'Restored', s_purged: 'Deleted', s_lost: 'Missing', s_aborted: 'Cancelled',
+    conflictT: 'Files already exist', conflictD: (n) => `${n} file(s) already exist at the original path. Overwrite them?`, overwrite: 'Yes, overwrite',
+    restoredOk: (n) => `✅ Restored ${n} file(s), hashes match`, purgeT: 'Delete backup', purgeD: 'Files in this backup will be deleted forever and cannot be restored.', purgeYoung: (d) => `⚠️ This backup is only ${d} days old — waiting 90 days is recommended.`,
+    noRestorePoint: 'Note: a system restore point is not a substitute for this backup.',
+    themeT: 'Style', langT: 'Language', th_glassRed: 'Red & black glass', th_glassWhiteRed: 'White & red glass', th_glassWhite: 'White glass', th_glassClear: 'Clear glass', th_dark: 'Dark', th_light: 'White', th_system: 'Match Windows',
+    thd_glassClear: 'Shows your desktop behind it', thd_system: 'Follows Windows light/dark mode', glassNote: 'Real glass effect needs Windows 11 — on Windows 10 you get the same colours without transparency.',
     whole: 'Whole category', showMissing: 'Show not found', hideMissing: 'Hide not found', loading: 'Loading...', more: (n) => `and ${n} more`,
   },
 };
@@ -143,6 +205,9 @@ const IC = {
   smart: '<path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
   history: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>',
   about: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+  installer: '<path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+  restore: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
   folder: '<path d="M3 6a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/>',
   file: '<path d="M6 2h9l5 5v15H6z"/><path d="M15 2v5h5"/>',
   video: '<rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
@@ -172,11 +237,12 @@ const riskChip = (r) => r ? `<span class="chip ${r}">${t(r)}</span>` : '';
 const explainOf = (p) => KB.explain(p, S.env);
 
 // ═════════════ الشريط الجانبي ═════════════
-const NAV = ['home', 'analyzer', 'clean', 'large', 'types', 'smart', 'history', 'about'];
+const NAV = ['home', 'analyzer', 'clean', 'installer', 'large', 'types', 'smart', 'history', 'settings', 'about'];
 function renderSidebar() {
   const counts = { large: S.scan ? S.scan.top.length : 0, smart: S.scan ? S.scan.findings.length : 0 };
   $('#sidebar').innerHTML = NAV.map((v) => `<div class="nav ${S.view === v ? 'active' : ''}" data-nav="${v}">${icon(v)}<span>${t(v)}</span>${counts[v] ? `<span class="count">${counts[v]}</span>` : ''}</div>`).join('') +
     `<div class="side-foot">
+      ${S.upd && S.upd.info && S.upd.info.available ? `<button class="btn sm primary" data-upd-banner="1">⬆ ${t('updBanner')} <span class="ltr">${esc(S.upd.info.version)}</span></button>` : ''}
       ${S.isAdmin ? '' : `<button class="btn sm" data-act="admin">${icon('shield')}${t('runAdmin')}</button>`}
       <button class="btn sm ghost" data-act="lang">🌐 ${t('lang')}</button>
       <div class="dim" style="font-size:11px;text-align:center">IBRAPROGRAM • v${esc(S.version || '')}</div>
@@ -188,7 +254,7 @@ function go(v) {
   S.view = v;
   $$('.view').forEach((el) => el.classList.toggle('active', el.id === 'v-' + v));
   renderSidebar();
-  ({ home: renderHome, analyzer: renderAnalyzer, clean: renderClean, large: renderLarge, types: renderTypes, smart: renderSmart, history: renderHistory, about: renderAbout })[v]();
+  ({ home: renderHome, analyzer: renderAnalyzer, clean: renderClean, installer: renderInstaller, large: renderLarge, types: renderTypes, smart: renderSmart, history: renderHistory, settings: renderSettings, about: renderAbout })[v]();
   $('#main').scrollTop = 0;
 }
 
@@ -237,11 +303,13 @@ async function renderHome() {
         </div>
       </div>
     </div>
+    <div id="storeSlot"></div>
     <div class="sp"></div>
     <h2>${t('drives')}</h2>
     <div class="grid g3">${drives}</div>
     ${junkSum}
     ${summary}`;
+  if (typeof placeStoreSlider === 'function') placeStoreSlider();
 }
 
 // ═════════════ الفحص ═════════════
@@ -707,7 +775,7 @@ async function renderSmart() {
 // ═════════════ السجل وحول ═════════════
 async function renderHistory() {
   const h = await api.history();
-  const kindName = { delete: t('kindDelete'), junk: t('kindJunk'), 'junk-items': t('kindItems'), prevent: t('kindPrevent') };
+  const kindName = { delete: t('kindDelete'), junk: t('kindJunk'), 'junk-items': t('kindItems'), prevent: t('kindPrevent'), 'msi-move': '📦 ' + t('moveBackup'), 'msi-delete': '🔥 ' + t('installer') + ' — ' + t('deletePerm'), 'msi-restore': '♻️ ' + t('restore'), 'msi-purge': t('purge') };
   $('#v-history').innerHTML = `<div class="row"><div class="grow"><h1>${t('history')}</h1><p class="lead">${t('histLead')}</p></div>${h.length ? `<button class="btn" data-act="clear-hist">${t('clearHist')}</button>` : ''}</div>
     ${h.length ? `<div class="card"><table class="t"><tr><th></th><th></th><th>${t('count')}</th><th>${t('size')}</th><th></th></tr>
     ${h.map((e) => `<tr><td class="ltr dim">${new Date(e.at).toLocaleString('en-GB')}</td><td><b>${kindName[e.kind] || e.kind}</b> ${e.mode ? `<span class="chip admin">${e.mode === 'trash' ? t('modeTrash') : t('modePerm')}</span>` : ''}<div class="pth mono" style="max-width:520px">${esc((e.sample || e.cats || [e.key || '']).join(' • '))}</div></td><td class="ltr">${e.count ?? ''}${e.failed ? ` <span style="color:var(--review)">(-${e.failed})</span>` : ''}</td><td class="ltr gold">${e.freed ? fmt(e.freed) : ''}</td><td></td></tr>`).join('')}</table></div>` : `<div class="empty">${t('noHist')}</div>`}`;
@@ -776,7 +844,7 @@ document.addEventListener('click', async (e) => {
       case 'prevent-undo': { await api.preventUndo(act.dataset.cat); S.prevent[act.dataset.cat] = false; return renderClean(); }
       case 'cleanmgr': return api.cleanmgr();
       case 'admin': return api.relaunchAdmin();
-      case 'lang': S.lang = S.lang === 'ar' ? 'en' : 'ar'; applyLang(); api.saveSettings({ lang: S.lang }); return go(S.view);
+      case 'lang': S.lang = S.lang === 'ar' ? 'en' : 'ar'; applyLang(); if (typeof storeNode !== 'undefined' && storeNode) { storeNode.remove(); storeNode = null; } api.saveSettings({ lang: S.lang }); return go(S.view);
       case 'clear-hist': await api.clearHistory(); return renderHistory();
     }
     return;
@@ -830,11 +898,15 @@ function applyLang() {
 }
 
 // ═════════════ البداية ═════════════
-(async function init() {
+async function init() {
   const info = await api.info();
   S.env = info.env; S.isAdmin = info.isAdmin; S.version = info.version;
   S.lang = (info.settings && info.settings.lang) || 'ar';
+  S.themeName = (info.settings && info.settings.theme) || 'glass-red';
+  if (typeof applyThemeUI === 'function') applyThemeUI(info.theme);
   applyLang();
   await refreshDrives();
   go('home');
-})();
+}
+document.addEventListener('DOMContentLoaded', init);
+

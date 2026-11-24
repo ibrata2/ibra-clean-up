@@ -77,21 +77,52 @@ function checkDeletable(p) {
 }
 
 // ───── النافذة ─────
+// ───── الستايلات ─────
+const WIN_BUILD = IS_WIN ? Number(os.release().split('.')[2] || 0) : 0;
+const SUPPORTS_GLASS = WIN_BUILD >= 22000; // ويندوز 11
+const THEMES = {
+  'glass-red':   { dark: true,  bg: '#0c0a0b', bar: '#120b0d', sym: '#d4af37', glass: true },
+  'glass-white-red': { dark: false, bg: '#f6f1f1', bar: '#f7eff0', sym: '#c4142c', glass: true },
+  'glass-white': { dark: false, bg: '#f4f5f8', bar: '#f4f5f8', sym: '#333333', glass: true },
+  'glass-clear': { dark: true,  bg: '#101010', bar: '#141414', sym: '#ffffff', glass: true, clear: true },
+  'dark':        { dark: true,  bg: '#111214', bar: '#111214', sym: '#e6e6e6' },
+  'light':       { dark: false, bg: '#ffffff', bar: '#ffffff', sym: '#222222' },
+};
+function resolveTheme(name) {
+  if (name === 'system') return nativeTheme.shouldUseDarkColorsForSystemPreference ? 'dark' : 'light';
+  return THEMES[name] ? name : 'glass-red';
+}
+function applyTheme(name) {
+  const key = resolveTheme(name);
+  const t = THEMES[key];
+  const glassOn = !!(t.glass && SUPPORTS_GLASS);
+  nativeTheme.themeSource = t.dark ? 'dark' : 'light';
+  if (win && !win.isDestroyed()) {
+    try { win.setBackgroundMaterial(glassOn ? 'acrylic' : 'none'); } catch { }
+    win.setBackgroundColor(glassOn ? '#00000000' : t.bg);
+    if (IS_WIN) try { win.setTitleBarOverlay({ color: glassOn ? '#00000000' : t.bar, symbolColor: t.sym, height: 40 }); } catch { }
+  }
+  return { key, glassOn, supportsGlass: SUPPORTS_GLASS };
+}
+ipcMain.handle('theme:set', (_e, name) => { writeJSON('settings.json', { ...readJSON('settings.json', {}), theme: name }); return applyTheme(name); });
+nativeTheme.on('updated', () => { if ((readJSON('settings.json', {}).theme) === 'system') { const r = applyTheme('system'); send('theme:changed', r); } });
+
 function createWindow() {
-  nativeTheme.themeSource = 'dark';
+  const startTheme = THEMES[resolveTheme(readJSON('settings.json', {}).theme || 'glass-red')];
+  nativeTheme.themeSource = startTheme.dark ? 'dark' : 'light';
   win = new BrowserWindow({
     width: 1360, height: 860, minWidth: 1040, minHeight: 640,
-    backgroundColor: '#0c0a0b',
+    backgroundColor: startTheme.bg,
     title: 'IBRA CLEAN UP',
     icon: path.join(__dirname, '..', 'build', 'icon.png'),
     titleBarStyle: IS_WIN ? 'hidden' : 'default',
-    titleBarOverlay: IS_WIN ? { color: '#0c0a0b', symbolColor: '#d4af37', height: 40 } : undefined,
+    titleBarOverlay: IS_WIN ? { color: startTheme.bar, symbolColor: startTheme.sym, height: 40 } : undefined,
     show: false,
     webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, nodeIntegration: false, sandbox: false },
   });
   win.removeMenu();
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
-  win.once('ready-to-show', () => win.show());
+  win.once('ready-to-show', () => { applyTheme(readJSON('settings.json', {}).theme || 'glass-red'); win.show(); });
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https?:/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
 }
 
@@ -99,6 +130,11 @@ app.whenReady().then(createWindow);
 app.on('window-all-closed', () => app.quit());
 
 const send = (ch, data) => { if (win && !win.isDestroyed()) win.webContents.send(ch, data); };
+
+// قسم تنظيف مخلفات Windows Installer
+require('./msi')({ ipcMain, send, readJSON, writeJSON, addHistory, ENV, dialog, shell, getWin: () => win });
+// التحديث الداخلي
+require('./updater')({ ipcMain, send });
 
 function getWorker() {
   if (worker) return worker;
@@ -119,7 +155,7 @@ const ps = (script, timeout) => run('powershell.exe', ['-NoProfile', '-NonIntera
 ipcMain.handle('app:info', async () => {
   let isAdmin = false;
   if (IS_WIN) isAdmin = (await run('net', ['session'], { timeout: 8000 })).ok;
-  return { env: ENV, version: require('../package.json').version, isAdmin, platform: process.platform, settings: readJSON('settings.json', { lang: 'ar' }) };
+  return { env: ENV, version: require('../package.json').version, isAdmin, platform: process.platform, settings: readJSON('settings.json', { lang: 'ar' }), supportsGlass: SUPPORTS_GLASS, theme: applyTheme(readJSON('settings.json', {}).theme || 'glass-red') };
 });
 ipcMain.handle('settings:save', (_e, s) => { writeJSON('settings.json', { ...readJSON('settings.json', {}), ...s }); return true; });
 

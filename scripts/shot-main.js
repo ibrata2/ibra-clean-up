@@ -37,7 +37,7 @@ if (!fs.existsSync(U)) {
 const INST = path.join(ROOT, 'Windows', 'Installer');
 if (!fs.existsSync(INST)) {
   fs.mkdirSync(path.join(INST, '$PatchCache$', 'Managed'), { recursive: true });
-  const f = (n, size, days) => { const p = path.join(INST, n); const fd = fs.openSync(p, 'w'); fs.ftruncateSync(fd, Math.round(size / 64)); fs.closeSync(fd); const t = (Date.now() - days * 864e5) / 1000; fs.utimesSync(p, t, t); };
+  const f = (n, size, days) => { const p = path.join(INST, n); const fd = fs.openSync(p, 'w'); fs.ftruncateSync(fd, Math.round(size / (process.env.SHOT_PROMO ? 1 : 64))); fs.closeSync(fd); const t = (Date.now() - days * 864e5) / 1000; fs.utimesSync(p, t, t); };
   f('1a2b3c.msi', 180 * M, 400); f('4d5e6f.msp', 1.2 * G, 300); f('7a8b9c.msp', 850 * M, 500); f('d00d1e.msi', 95 * M, 200);
   f('ab12cd.msp', 2.4 * G, 700); f('ef34aa.msp', 1.7 * G, 650); f('99ff00.msi', 420 * M, 900); f('c0ffee.msp', 640 * M, 800); f('SourceHash{1234}', 2 * M, 50);
   f('$PatchCache$/Managed/big.cab', 3.1 * G, 600); f('fresh01.msi', 30 * M, 0);
@@ -73,9 +73,22 @@ app.on('browser-window-created', (_e, win) => {
   win.webContents.once('did-finish-load', async () => {
     win.setSize(1360, 860);
     const js = (c) => win.webContents.executeJavaScript(c);
-    const shot = async (n) => { await wait(700); const img = await win.webContents.capturePage(); fs.writeFileSync(path.join(OUT, n + '.png'), img.toPNG()); };
+    const shot = async (n) => { await wait(700); if (process.env.SHOT_PROMO) { await js(`S.isAdmin=true; renderSidebar(); if (S.view==='installer') renderInstaller();`); await wait(700); } if (process.env.SHOT_PROMO) await js(fs.readFileSync(path.join(__dirname, 'promo-fix.js'), 'utf8') + '(' + JSON.stringify(ROOT) + ')'); if (process.env.SHOT_PROMO) await wait(400); const img = await win.webContents.capturePage(); fs.writeFileSync(path.join(OUT, n + '.png'), img.toPNG()); };
     try {
-      await wait(2500); console.log('TYPES', await js(`[typeof renderSettings, typeof renderInstaller, typeof placeStoreSlider, typeof ask, [...document.scripts].map(x=>x.src.split('/').pop()).join(',')].join(' ')`)); await shot('1-home-slider'); if (process.env.SHOT_QUICK) { await js(`document.querySelector('[data-act=lang]').click()`); await wait(800); await shot('1b-home-en'); app.quit(); return; }
+      await wait(2500); console.log('TYPES', await js(`[typeof renderSettings, typeof renderInstaller, typeof placeStoreSlider, typeof ask, [...document.scripts].map(x=>x.src.split('/').pop()).join(',')].join(' ')`)); await shot('1-home-slider'); if (process.env.SHOT_PROMO) {
+        const U2 = JSON.stringify(U);
+        await js(`document.querySelector('[data-act=scan-me]').click()`); await wait(3000);
+        await js(`(async()=>{ const id = await window.ibra.findPath(${JSON.stringify(path.join(U,'AppData','Roaming'))}); S.sel=null; await openNode(id); document.querySelector('.li[data-dir]').click(); })()`); await wait(1000); await shot('p2-analyzer');
+        await js(`go('clean'); scanJunk()`); await wait(2500);
+        await js(`['chrome-ai','capcut-drafts'].forEach(i=>S.openCats.add(i)); S.junkChecked.add('user-temp'); S.junkChecked.add('chrome'); S.junkChecked.add('npm'); renderClean()`); await wait(900); await shot('p3-clean');
+        await js(`go('installer')`); await wait(400); await js(`document.querySelector('[data-mact=scan]').click()`); await wait(2500);
+        await js(`S.msi.res.items.filter(x=>x.cat==='orphan').slice(0,3).forEach(x=>S.msi.sel.set(x.path,{path:x.path,size:x.size})); renderInstaller()`); await wait(800); await shot('p4-installer');
+        await js(`go('large')`); await wait(700); await shot('p5-large');
+        await js(`go('settings')`); await wait(800); await shot('p6-settings');
+        await js(`document.querySelector('[data-theme-pick="glass-white-red"]').click()`); await wait(500); await js(`go('analyzer')`); await wait(900); await shot('p7-white-red');
+        await js(`document.querySelector('[data-theme-pick]')||0; go('settings')`); await wait(300); await js(`document.querySelector('[data-theme-pick="glass-red"]').click()`); await wait(300);
+        app.quit(); return;
+      } if (process.env.SHOT_QUICK) { await js(`document.querySelector('[data-act=lang]').click()`); await wait(800); await shot('1b-home-en'); app.quit(); return; }
       await js(`go('installer')`); await wait(500); await shot('2-installer-empty');
       await js(`document.querySelector('[data-mact=scan]').click()`); await wait(2500); await shot('3-installer-scan');
       await js(`S.msi.filter='orphan'; S.msi.res.items.filter(x=>x.cat==='orphan').forEach(x=>S.msi.sel.set(x.path,{path:x.path,size:x.size})); renderInstaller()`); await wait(600);

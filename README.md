@@ -27,6 +27,12 @@ npm run test:scan  # اختبار محرك الفحص
 node scripts/test-msi.js  # اختبار محرك مخلفات التثبيت (نقل، استعادة، انقطاع)
 npm run dist       # يبني dist/IBRA-CLEAN-UP-Setup-<version>.exe
 ```
+## مفتاح النشر (مرة وحدة)
+GitHub ما يسمح لمفتاح الـ workflow الافتراضي ينشئ إصدارات بهذا المستودع، فالنشر يحتاج مفتاح من حسابك:
+1. https://github.com/settings/personal-access-tokens/new ← Repository access: Only select repositories ← `ibra-clean-up` ← Permissions: **Contents: Read and write** ← Generate token.
+2. بالمستودع: Settings ← Secrets and variables ← Actions ← New repository secret ← الاسم `RELEASE_TOKEN` والقيمة المفتاح.
+3. Actions ← Releases ← Run workflow.
+
 ## نشر إصدار جديد
 1. غيّر `version` بـ `package.json` وارفع التعديل.
 2. أضف سطر الإصدار لـ `releases/versions.json` (الرقم + الـ commit + `"latest": true`، وخلي الإصدار القديم `false`) واكتب ملاحظاته بـ `releases/notes/<الإصدار>.md`.

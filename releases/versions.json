@@ -1,5 +1,5 @@
 [
-  { "version": "1.0.0", "commit": "849b3770d58299f4aad9ba8bba0cd013e2f51766", "latest": false },
-  { "version": "1.1.0", "commit": "73de3daa537e54469d95ef7a2e6b1ef587462dc9", "latest": false },
-  { "version": "1.1.1", "commit": "c0f4dc8a44cdfa7952b92b46458563fecc50950e", "latest": true }
+  { "version": "1.0.0", "commit": "5e8a93d799a5c25383429836697d6f7b128b06b1", "latest": false },
+  { "version": "1.1.0", "commit": "d41f3245bd8dc83da649d9f4f67455de2811977e", "latest": false },
+  { "version": "1.1.1", "commit": "09670d2b712960dd44c4a5fae88762fa46f1beb4", "latest": true }
 ]

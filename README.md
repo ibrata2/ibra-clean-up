@@ -35,7 +35,7 @@ GitHub ما يسمح لمفتاح الـ workflow الافتراضي ينشئ إ
 
 ## نشر إصدار جديد
 1. غيّر `version` بـ `package.json` وارفع التعديل.
-2. أضف سطر الإصدار لـ `releases/versions.json` (الرقم + الـ commit + `"latest": true`، وخلي الإصدار القديم `false`) واكتب ملاحظاته بـ `releases/notes/<الإصدار>.md`.
+2. أضف سطر الإصدار لـ `releases/versions.json` (الرقم + commit من `main` + `"latest": true`، وخلي الإصدار القديم `false`). مهم: الـ commit لازم تكون ملفات `.github/workflows` بيه مطابقة لـ `main`، وإلا GitHub يرفض إنشاء الـ tag بخطأ 403 واكتب ملاحظاته بـ `releases/notes/<الإصدار>.md`.
 3. ارفع على `main` — GitHub يبني ملف التثبيت من نفس الـ commit وينشره بصفحة الإصدارات مع حجمه وبصمته SHA-256. الإصدارات المنشورة مسبقاً ما تنعاد.
 
 ## التحديث الداخلي من IBRA STORE

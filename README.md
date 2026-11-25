@@ -27,7 +27,10 @@ npm run test:scan  # اختبار محرك الفحص
 node scripts/test-msi.js  # اختبار محرك مخلفات التثبيت (نقل، استعادة، انقطاع)
 npm run dist       # يبني dist/IBRA-CLEAN-UP-Setup-<version>.exe
 ```
-على GitHub: ارفع tag مثل `v1.0.0` وراح يتبنى ملف التثبيت تلقائياً ويتنشر بالـ Releases (أو شغّل الـ workflow يدوياً من تبويب Actions).
+## نشر إصدار جديد
+1. غيّر `version` بـ `package.json` وارفع التعديل.
+2. أضف سطر الإصدار لـ `releases/versions.json` (الرقم + الـ commit + `"latest": true`، وخلي الإصدار القديم `false`) واكتب ملاحظاته بـ `releases/notes/<الإصدار>.md`.
+3. ارفع على `main` — GitHub يبني ملف التثبيت من نفس الـ commit وينشره بصفحة الإصدارات مع حجمه وبصمته SHA-256. الإصدارات المنشورة مسبقاً ما تنعاد.
 
 ## التحديث الداخلي من IBRA STORE
 البرنامج يقرأ `https://ibraprogram.netlify.app/api/apps` ويدور على العنصر اللي `slug` مالته `ibra-clean-up`. حتى يشتغل التحديث المباشر، خلي بالعنصر:

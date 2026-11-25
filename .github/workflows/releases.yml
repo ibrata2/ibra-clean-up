@@ -1,8 +1,6 @@
 name: Releases
 # ينشر كل إصدار بـ releases/versions.json (إذا ما منشور بعد): يبني ملف التثبيت من نفس الكود مالته ويرفعه مع البصمة
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

@@ -1,0 +1,38 @@
+name: Diagnose release permission
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      R: ${{ github.repository }}
+    steps:
+      - name: Context
+        run: |
+          echo "actor=${{ github.actor }} triggering=${{ github.triggering_actor }} event=${{ github.event_name }}"
+          gh api repos/$R --jq '{private, visibility, permissions}' || true
+      - name: Create tag via API
+        run: |
+          gh api -X POST repos/$R/git/refs -f ref=refs/tags/diag-tag-test -f sha=$GITHUB_SHA && echo "TAG_API=OK" || echo "TAG_API=FAIL"
+          gh api -X DELETE repos/$R/git/refs/tags/diag-tag-test >/dev/null 2>&1 || true
+      - name: Create tag via git push
+        run: |
+          git init -q x && cd x && git remote add origin https://x-access-token:${GH_TOKEN}@github.com/$R.git
+          git fetch -q --depth 1 origin $GITHUB_SHA && git tag diag-push-test FETCH_HEAD && git push origin diag-push-test && echo "TAG_PUSH=OK" || echo "TAG_PUSH=FAIL"
+          git push origin :refs/tags/diag-push-test >/dev/null 2>&1 || true
+      - name: Create draft release (no tag)
+        run: |
+          out=$(gh api -X POST repos/$R/releases -f tag_name=diag-release-test -f name=diag -F draft=true 2>&1) && echo "RELEASE_DRAFT=OK" || echo "RELEASE_DRAFT=FAIL $out"
+          id=$(echo "$out" | jq -r .id 2>/dev/null || true); [ -n "$id" ] && [ "$id" != null ] && gh api -X DELETE repos/$R/releases/$id || true
+      - name: Create release on existing commit
+        run: |
+          out=$(gh api -X POST repos/$R/releases -f tag_name=diag-release-test2 -f target_commitish=$GITHUB_SHA -f name=diag2 2>&1) && echo "RELEASE_FULL=OK" || echo "RELEASE_FULL=FAIL $out"
+          id=$(echo "$out" | jq -r .id 2>/dev/null || true); [ -n "$id" ] && [ "$id" != null ] && gh api -X DELETE repos/$R/releases/$id || true
+          gh api -X DELETE repos/$R/git/refs/tags/diag-release-test2 >/dev/null 2>&1 || true
+      - name: Other write (create + delete a label)
+        run: |
+          gh api -X POST repos/$R/labels -f name=diag-label -f color=ff0000 >/dev/null 2>&1 && echo "LABEL=OK" || echo "LABEL=FAIL (needs issues perm, expected)"
+          gh api -X DELETE repos/$R/labels/diag-label >/dev/null 2>&1 || true
